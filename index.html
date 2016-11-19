@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Catflap by maxkostka</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Catflap</h1>
+        <p class="header">Catflap with raspberry pi plus camera and image recognition to keep the cat from bringing prey inside</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/maxkostka/catflap/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/maxkostka/catflap/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/maxkostka/catflap">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/maxkostka">maxkostka</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a id="catflap" class="anchor" href="#catflap" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>catflap</h1>
+
+<p>The catflap for detecting prey in the cats snout.
+Based on a raspberry pi 2 with the raspicam and the catflap sureflap.
+The raspberry runs ubuntu with ros indigo, python 2.x opencv.
+The system has 4 sensors, two ir sensors to detect the presence of a cat in the catflap tunnel, a sensor to check, whether the status of the flap and a camera to take pictures of the cats profile.</p>
+
+<p>I further think that the original idea was not created by the three youngsters or at least they were not the only ones.
+I was further inspired by joakim soderberg and the catcierge <a href="https://joakimsoderberg.github.io/catcierge/">https://joakimsoderberg.github.io/catcierge/</a> (Nice work Joakim!) and the flow control project which can no longer be found on the web (origial url: <a href="http://www.quantumpicture.com/Flo_Control/flo_control.htm">http://www.quantumpicture.com/Flo_Control/flo_control.htm</a>) but we can find some remaints of its impact on others <a href="http://www.openscience.org/blog/?p=109">http://www.openscience.org/blog/?p=109</a>.</p>
+
+<p>At least four years after the flo control project, three germans participated in a contest called 'jugend forscht' <a href="http://www.neumarktonline.de/art.php?newsid=59507">http://www.neumarktonline.de/art.php?newsid=59507</a>). The price was patent application <a href="http://www.freepatentsonline.com/DE202009002677.html">http://www.freepatentsonline.com/DE202009002677.html</a> which is currently owned by the Feldberglicht GmbH. They are still developing a commercial application - check it out <a href="http://www.mouse-lock.de/">http://www.mouse-lock.de/</a>. But don't expect a working catflap before a working fusion reactor ;)</p>
+
+<p>usage so far</p>
+
+<blockquote>
+<p>roslaunch catflap_training.launch &lt;
+to start the ros nodes to aquire images, when a cat enters passes the flap</p>
+</blockquote>
+
+<p>i added the startup.sh via</p>
+
+<blockquote>
+<p>sudo crontab -e &lt;
+just add a line like 
+<a href="https://github.com/reboot" class="user-mention">@reboot</a> /home/max/projects/catflap/ros_catkin_ws/src/startup.sh &gt;&gt;/home/max/projects/catflap/log_cronrun 2&gt;&amp;1 &lt;</p>
+</blockquote>
+
+<p>to start it at at reboot</p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
