@@ -32,7 +32,7 @@ def ir_sensor_outer_start():
     
     # define the publisher door_state
     state_publisher = rospy.Publisher('outer_ir_sensor_state', Bool, queue_size = 1)
-    rospy.init_node('outer_ir_sensor',log_level=rospy.DEBUG)
+    rospy.init_node('outer_irsensor',log_level=rospy.DEBUG)
     rate = rospy.Rate(3)
 
     # publisher ready - add the edge detection - Falling edge means activation

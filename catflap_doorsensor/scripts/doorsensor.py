@@ -54,7 +54,7 @@ def door_sensor_start():
     # define the publisher door_state
     door_state_publisher = rospy.Publisher('door_state', Bool, queue_size = 1)
     rospy.init_node('door_sensor',log_level=rospy.DEBUG)
-    rate = rospy.Rate(1)
+    rate = rospy.Rate(5)
     rospy.logdebug('door sensor is now ready to operate')
     while not rospy.is_shutdown():
         sensorstate = GPIO.input(door_sensor)
