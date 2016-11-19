@@ -97,16 +97,18 @@ The raspi is mountet on a wooden board to the left. Reflections can be seen in t
 <img src="./images/prototype1_prey_1.png" alt="my cat Socke with a mouse">
 	      <p> gutted blackbird, definitely dead
 <img src="./images/prototype1_prey_2.png" alt="dont know which cat with gutted blackbird">
-<p>Unfortunately, my cat Luigi was hit by a cat and died, and the other cat Socke lived with us for some more months. At some day she just didn't return home. We never found out what happened to her, hopefully she just found a new home.
+<p>Unfortunately, my cat Luigi was hit by a cat and died, and the other cat Socke lived with us for some more months. At
+	some day she just didn't return home. We never found out what happened to her, hopefully she just found a new home.
 So this was the end of the catflap plans - prototype one.</p>
 
 <h1>
 <a id="the-new-cats-on-the-block" class="anchor" href="#the-new-cats-on-the-block" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The new cats on the block</h1>
 
 <p>A little down the road we decided to get two new cats. Since Socke and Luigi had a lot of bad luck, we did not want to let
-them go outdoors. Bad luck did not end here, one of the two, called Kitty died soon after we got her (<a href="https://en.wikipedia.org/wiki/Feline_infectious_peritonitis">FIP</a>
-<p>So we were a one cat household with an indoor cat.</p>
-But a little further down the road our household got a new fellow lodger, the cutest baby in the world :) And things got
+them go outdoors. Bad luck did not end here, one of the two, called Kitty died soon after we got her
+	(<a href="https://en.wikipedia.org/wiki/Feline_infectious_peritonitis">FIP</a>) So we were a one cat household
+	with an indoor cat.</p>
+<p>But a little further down the road our household got a new fellow lodger, the cutest baby in the world :) And things got
 worse with our cat Charlie. She simply has a loooooot of energy that she could not for her life shake off during her day
 or her night. So after some artistic high speed stunts involving rayor sharp claws very close to our baby we decided that
 Charlie should indeed be an outdoor cat again. This time the catflap would lead her to the garden, and not he front door,
@@ -117,17 +119,24 @@ and a snuggly cat returned home. But it's ok for us, she still looks the same:)<
 <h1>
 <a id="time-for-a-new-catflap-prototype" class="anchor" href="#time-for-a-new-catflap-prototype" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Time for a new catflap prototype</h1>
 
-<p>Considering the energy Charlie displayed so far I expected her to bring home a small deer or one of the neighbours dogs at least on one of her next next nightly tours. we were lucky so far, she only brought in small insects.
+<p>Considering the energy Charlie displayed so far I expected her to bring home a small deer or one of the neighbours
+	dogs at least on one of her next next nightly tours. we were lucky so far, she only brought in small insects.
+	<p>Charlie bringing home a small insect
 <img src="./images/charlie_insect.jpg" alt="charlie bringing home a small insect">
-In the meantime a raspberry pi 2 was bought, a new housing was constructed and I heard about ros and wanted to try it out. And here we are with the catflap.
-Right now it can aquire images, when a cat enters the door and does not take pictures when the door is already open, or when a cat is leaving the house.</p>
+<p>In the meantime a raspberry pi 2 was bought, a new housing was constructed and I heard about ros and wanted to try it out.
+	And here we are with the catflap. Right now it can aquire images, when a cat enters the door and does not take
+	pictures when the door is already open, or when a cat is leaving the house.</p>
 
 <h1>
 <a id="how-the-protoype-works-right-now" class="anchor" href="#how-the-protoype-works-right-now" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How the protoype works right now:</h1>
 
 <p>Two IR sensors detect when Charlie enters the housing. A door sensor detects, if the door is closed or open.
-When a the IR sensors are active and the door is closed and an internal timeout has elapsed, the backlight is turned on and an image is recorded, saved, and the backlight is turned off. A timeout is set to a certain short period then (under a second). If the IR sensors are still active, the door is still closed when the timeout has elapsed, the light is turned on again, image recorded ... timeout is set again ... and so on until the door is opened.
-As long as the door is open no image will be recorded. When the door closes, a timeout is set to a certain long period to get a certain dead time (about 5 seconds).</p>
+When a the IR sensors are active and the door is closed and an internal timeout has elapsed, the backlight is turned on
+	and an image is recorded, saved, and the backlight is turned off. A timeout is set to a certain short period then
+	(under a second). If the IR sensors are still active, the door is still closed when the timeout has elapsed, the
+	light is turned on again, image recorded ... timeout is set again ... and so on until the door is opened.</p>
+<p>As long as the door is open no image will be recorded. When the door closes, a timeout is set to a certain long
+	period to get a certain dead time (about 5 seconds).</p>
 
 <p>The next steps are:</p>
 
