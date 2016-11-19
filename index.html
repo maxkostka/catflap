@@ -41,11 +41,18 @@ The system has 4 sensors, two ir sensors to detect the presence of a cat in the 
 <p>I further think that the original idea was not created by the three youngsters or at least they were not the only ones.
 I was further inspired by joakim soderberg and the catcierge <a href="https://joakimsoderberg.github.io/catcierge/">https://joakimsoderberg.github.io/catcierge/</a> (Nice work Joakim!) and the flow control project which can no longer be found on the web (origial url: <a href="http://www.quantumpicture.com/Flo_Control/flo_control.htm">http://www.quantumpicture.com/Flo_Control/flo_control.htm</a>) but we can find some remaints of its impact on others <a href="http://www.openscience.org/blog/?p=109">http://www.openscience.org/blog/?p=109</a>.</p>
 
-<p>At least four years after the flo control project, three germans participated in a contest called 'jugend forscht' <a href="http://www.neumarktonline.de/art.php?newsid=59507">http://www.neumarktonline.de/art.php?newsid=59507</a>). The price was patent application <a href="http://www.freepatentsonline.com/DE202009002677.html">http://www.freepatentsonline.com/DE202009002677.html</a> which is currently owned by the Feldberglicht GmbH. They are still developing a commercial application - check it out <a href="http://www.mouse-lock.de/">http://www.mouse-lock.de/</a>. But don't expect a working catflap before a working fusion reactor ;)</p>
+<p>Some time after the flo control project, three germans participated in a contest called 'jugend forscht' <a href="http://www.neumarktonline.de/art.php?newsid=59507">http://www.neumarktonline.de/art.php?newsid=59507</a>) with a simpler concept only using light barriers. The price was patent application <a href="http://www.freepatentsonline.com/DE202009002677.html">http://www.freepatentsonline.com/DE202009002677.html</a> which is currently owned by the Feldberglicht GmbH. They are still developing a commercial application or at least the say they are developing- check it out <a href="http://www.mouse-lock.de/">http://www.mouse-lock.de/</a>. But don't expect a working catflap before a working fusion reactor ;)</p>
 
-<p>usage so far
+<p>usage so far</p>
+
+<ul>
+<li>setup a raspi 2 with ubuntu, ros, opencv raspi cam and the sensors. adapt the GPIO Pins, if neccessary.</li>
+<li>clone the repo into a ros workspace and build it</li>
+<li>start the single nodes to check your hardware</li>
+<li>if all is working fine, use the launch file for everything
 <code>roslaunch catflap_training.launch</code>
-to start the ros nodes to aquire images, when a cat passes the flap</p>
+to start the ros nodes to aquire images, when a cat passes the flap</li>
+</ul>
 
 <p>i added the startup.sh via
 <code>sudo crontab -e</code>
@@ -73,7 +80,7 @@ After a while I switched to a setup using backlight and modified my housing acco
 I want to show you two images with very nice presents:)
 <img src="catflap/images/prototype1_prey_1.png" alt="my cat Socke with a mouse">
 <img src="catflap/images/prototype1_prey_1.png" alt="dont know which cat with gutted blackbird">
-Unfortunately, my cat Luigi was hit by a car and died, and the other cat Socke lived with us for some more months. At some day she just didn't return home. We never found out what happened to her, hopefully she just found a new home.
+Unfortunately, my cat Luigi was hit by a cat and died, and the other cat Socke lived with us for some more months. At some day she just didn't return home. We never found out what happened to her, hopefully she just found a new home.
 So this was the end of the catflap plans - prototype one.</p>
 
 <h1>
@@ -81,7 +88,7 @@ So this was the end of the catflap plans - prototype one.</p>
 
 <p>A little down the road we decided to get two new cats. Since Socke and Luigi had a lot of bad luck, we did not want to let them go outdoors. Bad luck did not end here, one of the two, called Kitty died soon after we got her <a href="https://en.wikipedia.org/wiki/Feline_infectious_peritonitis">FIP</a>
 So we were a one cat household with an indoor cat.
-But a little further down the road our household got a new fellow lodger, the cutest baby in the world :) And things got worse with our cat Charlie. She simply has a loooooot of energy that she could not for her life shake off during her day or her night. So after some artistic high speed stunts involving rayor sharp claws very close to our baby we decided that Charlie should indeed be an outdoor cat again. This time the catflap would lead her to the garden, and not he front door, minimizing the need to cross the street there and the according risks of getting hit by a car or something.
+But a little further down the road our household got a new fellow lodger, the cutest baby in the world :) And things got worse with our cat Charlie. She simply has a loooooot of energy that she could not for her life shake off during her day or her night. So after some artistic high speed stunts involving rayor sharp claws very close to our baby we decided that Charlie should indeed be an outdoor cat again. This time the catflap would lead her to the garden, and not he front door, minimizing the need to cross the street there and the according risks of getting hit by a cat or something.
 In her first night out our cat must have been replaced by someone or at least brainwashed. The standoffish cat left and a snuggly cat returned home. But it's ok for us, she still looks the same:)</p>
 
 <h1>
@@ -106,7 +113,7 @@ As long as the door is open no image will be recorded. When the door closes, a t
 <li>aquire lot of training images</li>
 <li>train a classifier to detect the snout in the image</li>
 <li>do something to detect prey in the snout - I don't have concrete plans here</li>
-<li>electrically connect the sureflaps locking mechanism to the raspi or mount a servo on the locking mechanic.</li>
+<li>atomically connect the sureflaps locking mechanism to the raspi or mount a servo on the locking mechanic.</li>
 <li>install a second door before the RFID tunnel of the SureFlap - to keep the cat in the cameras field of view (The SureFlap has a RFID tunnel of about 10cm in length before the door. The camera can't see the cats head when she is standing right in front of the locked door, waiting for the lock to release. A second door, closing just with the end of the tunnel, mechanically connected with the inner door should do the job to keep the cat in the field of view)</li>
 <li>create a new ros node for lock - release logic</li>
 <li>create a new node for mailing a thumbnail picture plus lock/release decision</li>
