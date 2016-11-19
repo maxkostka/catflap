@@ -15,3 +15,7 @@ to start the ros nodes to aquire images, when a cat enters passes the flap
 
 i added the startup.sh via
 > sudo crontab -e <
+just add a line like 
+> @reboot /home/max/projects/catflap/ros_catkin_ws/src/startup.sh >>/home/max/projects/catflap/log_cronrun 2>&1 <
+
+to start it at at reboot
