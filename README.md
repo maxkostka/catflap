@@ -10,5 +10,8 @@ I was further inspired by joakim soderberg and the catcierge https://joakimsoder
 At least four years after the flo control project, three germans participated in a contest called 'jugend forscht' http://www.neumarktonline.de/art.php?newsid=59507). The price was patent application http://www.freepatentsonline.com/DE202009002677.html which is currently owned by the Feldberglicht GmbH. They are still developing a commercial application - check it out http://www.mouse-lock.de/. But don't expect a working catflap before a working fusion reactor ;)
 
 usage so far
-> roslaunch catflap_training.launch
+> roslaunch catflap_training.launch <
 to start the ros nodes to aquire images, when a cat enters passes the flap
+
+i added the startup.sh via
+> sudo crontab -e <
