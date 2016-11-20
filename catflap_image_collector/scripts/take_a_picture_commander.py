@@ -14,6 +14,7 @@ class Take_a_picture_commander():
         # define our state variables
         self.door_state = False
         self.timeout =  25
+        self.ir_state = False
         # define the listeners and their callbacks
         rospy.Subscriber("door_state",            Bool ,self.callback_door_sensor)
         rospy.Subscriber("inner_ir_sensor_state", Bool ,self.callback_ir_sensor)
@@ -41,8 +42,9 @@ class Take_a_picture_commander():
             self.door_state = True
             
         else:
-            # door closed, count down the timeout
-            if self.timeout > 0: self.timeout -= 1
+            # door closed, count down the timeout, if neccessary
+            # further condition: only count down, if both sensors have been inactive - ir_state = 0
+            if self.timeout > 0 and self.ir_state == 0: self.timeout -= 1
             self.door_state = False
 
     def callback_ir_sensor(self, data):
@@ -59,10 +61,22 @@ class Take_a_picture_commander():
                     break
             self.light_publisher.publish(False)
             n = datetime.now()
-            timestamp = "{0}_{1}_{2}_{3}_{4}_{5}_{6}".format(n.year,n.month,n.day,n.hour,n.minute,n.second,int(n.microsecond/100000))
+            timestamp = "{0:04d}_{1:02d}_{2:02d}_{3:02d}_{4:02d}_{5:02d}_{6:01d}".format(n.year,n.month,n.day,n.hour,n.minute,n.second,int(n.microsecond/100000))
             filename = "/home/max/Pictures/training/{0}.jpg".format(timestamp)
             cv2.imwrite(filename,self.image)
             print strftime("{0} {1} {2} {3}:{4}:{5} - picture taken").format(n.year,n.month,n.day,n.hour,n.minute,n.second)
+        # keep track of the ir states
+        # both sensors send data in regular intervals
+        # we want to keep track of situations, where one sensor maybe active
+        # e.g. cat sitting in front of it - the callback function will recieve True False True ...
+        if data.data:
+            # if any sensor is active set state to 2
+            self.ir_state = 2
+        else:
+            # we have a not active sensor, decrement the state until it's 0
+            if self.ir_state > 0:  self.ir_state -= 1
+            # state is zero after two consecutive False messages
+            
 
 if __name__ == '__main__':
     
