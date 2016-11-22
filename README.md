@@ -1,4 +1,6 @@
 # catflap
+https://maxkostka.github.io/catflap/
+
 The catflap for detecting prey in the cats snout.
 Based on a raspberry pi 2 with the raspicam and the catflap sureflap.
 The raspberry runs ubuntu with ros indigo, python 2.x opencv.
