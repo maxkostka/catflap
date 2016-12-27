@@ -11,5 +11,5 @@ export WORKON_HOME=/home/max/.virtualenvs
 source /usr/local/bin/virtualenvwrapper.sh
 echo switching to virtual environment cv
 workon cv
-roslaunch /home/max/projects/catflap/ros_catkin_ws/l.launch
+roslaunch /home/max/projects/catflap/ros_catkin_ws/src/catflap_training.launch
 
