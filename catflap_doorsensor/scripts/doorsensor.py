@@ -5,9 +5,9 @@ import RPi.GPIO as GPIO
 from std_msgs.msg import Bool
 
 # Pin number where the door sensor is connected to Raspi (BCM pin number)
-door_sensor = 13
+door_sensor = 19
 # Pin number where the door sensor supply is connected to Raspi (BCM pin number)
-door_sensor_supply = 19
+#door_sensor_supply = 19
 # doorstate global variable, True=closed; False=open
 
 doorstate = True
@@ -35,12 +35,12 @@ def door_sensor_start():
     GPIO.setmode(GPIO.BCM)
     global doorstate
     global door_sensor
-    global door_sensor_supply
+ #   global door_sensor_supply
 
     # sensing pin is pulldown input
     GPIO.setup(door_sensor,GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     # supply pin is output high
-    GPIO.setup(door_sensor_supply,GPIO.OUT, initial=1)
+    #GPIO.setup(door_sensor_supply,GPIO.OUT, initial=1)
     # supply is connected to sensing pin when the door is closed
     if GPIO.input(door_sensor) == 1:
         doorstate = True
@@ -70,21 +70,21 @@ def door_sensor_start():
 
 if __name__ == '__main__':
     from doorsensor import door_sensor
-    from doorsensor import door_sensor_supply
+    #from doorsensor import door_sensor_supply
     try:
         door_sensor_start()
     except rospy.ROSInterruptException:
         rospy.logdebug('door sensor is stopped now')
         # cleanup GPIO pins used
-        GPIO.output(door_sensor_supply,GPIO.LOW)
+        #GPIO.output(door_sensor_supply,GPIO.LOW)
         GPIO.cleanup(door_sensor)
-        GPIO.cleanup(door_sensor_supply)
+        #GPIO.cleanup(door_sensor_supply)
         rospy.logdebug('door sensor stopped, GPIO cleaned up')
     else:
         rospy.logdebug('door sensor is stopped now')
         # cleanup GPIO pins used
-        GPIO.output(door_sensor_supply,GPIO.LOW)
+        #GPIO.output(door_sensor_supply,GPIO.LOW)
         GPIO.cleanup(door_sensor)
-        GPIO.cleanup(door_sensor_supply)
+        #GPIO.cleanup(door_sensor_supply)
         rospy.logdebug('door sensor stopped, GPIO cleaned up')
 

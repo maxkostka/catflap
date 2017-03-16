@@ -22,6 +22,7 @@ class Take_a_picture_commander():
         self.light_publisher = rospy.Publisher("lightswitch_command", Bool, queue_size=3)
         # start the publisher
         self.take_a_picture_publisher = rospy.Publisher('take_a_picture', Bool, queue_size = 1)
+        self.door_lock_publisher = rospy.Publisher('door_lock_command', Bool, queue_size = 1)
         # initialize the camera and grab a reference to the raw camera capture
         self.camera = PiCamera()
         self.camera.resolution = (400, 300)
@@ -30,6 +31,7 @@ class Take_a_picture_commander():
         self.rawCapture = PiRGBArray(self.camera, size=(400, 300))
 
         self.light_publisher.publish(False)
+        self.door_lock_publisher.publish(False)
         
         rospy.spin()
         

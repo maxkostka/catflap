@@ -1,0 +1,91 @@
+#!/usr/bin/env python
+
+import rospy
+import RPi.GPIO as GPIO
+from std_msgs.msg import Bool
+
+class Doorsensor():
+    def __init__(self):
+        # state variable for the door, pin numbers for the Raspy
+        self.door_closed = True
+        self.door_state_dict = {"1":True,"0":False}
+        self.door_sensor_pin_falling = 13
+        self.door_sensor_pin_rising = 6
+        self.door_sensor_supply_pin = 19
+        
+        # start the initialisation
+        rospy.logdebug("door sensor is started now")
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BCM)
+        # two sensing pins are used, one for rising, one for falling edges
+        # sensing pin is pulldown input
+        GPIO.setup(self.door_sensor_pin,GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        # supply pin is output high
+        GPIO.setup(self.door_sensor_supply_pin,GPIO.OUT, initial=1)
+        # high state at the door_sensor_pin means closed door
+        door_state = GPIO.input(door_sensor)
+        self.door_closed = self.door_state_dict.get(door_state)
+            doorstate = True
+            rospy.logdebug('starting with door_closed: {}'.format(self.door_closed))
+            GPIO.add_event_detect(door_sensor,GPIO.FALLING, callback = door_opened)
+        else:
+            doorstate = False
+            rospy.logdebug('starting with door opened')
+            GPIO.add_event_detect(door_sensor,GPIO.RISING, callback = door_closed)
+
+    # define the publisher door_state
+    door_state_publisher = rospy.Publisher('door_state', Bool, queue_size = 1)
+    rospy.init_node('door_sensor',log_level=rospy.DEBUG)
+    rate = rospy.Rate(5)
+    rospy.logdebug('door sensor is now ready to operate')
+    while not rospy.is_shutdown():
+        sensorstate = GPIO.input(door_sensor)
+        if sensorstate != doorstate:
+            doorstate = sensorstate
+            if doorstate:
+                rospy.loginfo('door state was automatically corrected - now closed')
+            else:
+                rospy.loginfo('door state was automatically corrected - now opened')
+
+        door_state_publisher.publish(doorstate)
+        rate.sleep()
+
+
+def door_closed(channel):
+    global doorstate
+    global door_sensor
+    doorstate = True
+    GPIO.remove_event_detect(door_sensor)
+    GPIO.add_event_detect(door_sensor,GPIO.FALLING, callback = door_opened)
+    rospy.loginfo("door closed")
+
+def door_opened(channel):
+    global doorstate
+    global door_sensor
+    doorstate = False
+    GPIO.remove_event_detect(door_sensor)
+    GPIO.add_event_detect(door_sensor,GPIO.RISING, callback = door_closed)
+    rospy.loginfo("door opened")
+
+
+
+if __name__ == '__main__':
+    from doorsensor import door_sensor
+    from doorsensor import door_sensor_supply
+    try:
+        door_sensor_start()
+    except rospy.ROSInterruptException:
+        rospy.logdebug('door sensor is stopped now')
+        # cleanup GPIO pins used
+        GPIO.output(door_sensor_supply,GPIO.LOW)
+        GPIO.cleanup(door_sensor)
+        GPIO.cleanup(door_sensor_supply)
+        rospy.logdebug('door sensor stopped, GPIO cleaned up')
+    else:
+        rospy.logdebug('door sensor is stopped now')
+        # cleanup GPIO pins used
+        GPIO.output(door_sensor_supply,GPIO.LOW)
+        GPIO.cleanup(door_sensor)
+        GPIO.cleanup(door_sensor_supply)
+        rospy.logdebug('door sensor stopped, GPIO cleaned up')
+
