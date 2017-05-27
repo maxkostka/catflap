@@ -21,3 +21,33 @@ just add a line like
 > @reboot /home/max/projects/catflap/ros_catkin_ws/src/startup.sh >>/home/max/projects/catflap/log_cronrun 2>&1 <
 
 to start it at at reboot
+
+
+How detection and the door opening logic works:
+I trained a haar classifier on my cats snout.       
+catsnout.xml is the haar classifier for catsnouts trained with opencv.
+
+The classifier is used to look for catsnouts in each image taken.
+
+If a catsnout is found:
+The area of the catsnout (rectangle) and below (two times the catsnout
+rectangles height) is the region of interest for detection.
+The background is partly removed from the roi, then it is blurred and
+then thresholded with OTSUs method to get the biggest contour in this
+area (usually the catsnout and pray).
+If this contour is reaching down below the catsnout rectangle and
+takes up more pixels than a configurable threshold a pray is detected.
+
+If the contour does not reach down, or the area taken up is below the
+threshold, no pray is detected.
+
+Or there can be no catsnout found at all.
+
+The doorlock is operated on a trust value.
+The thre possible detection outcomes each have a configurable trust factor assigned. e.g.
+- catsnout detected, no pray       - factor 2.0
+- catsnout detected, pray detected - factor 0.33
+- no catsnout detected             - factor 0.95
+The momentary trust value is multiplied with the detection outcome factor.
+Starting value is 1.0
+The door opens if the trust value is above or equal to 4.0
