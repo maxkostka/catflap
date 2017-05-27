@@ -185,22 +185,22 @@ When a the IR sensors are active and the door is closed and an internal timeout 
 <li>create a new node for mailing a thumbnail picture plus lock/release decision</li>
 <li>some more ideas will certainly come along</li>
 </ul>
-Update i did work on some of the steps above:
+	      <b>Update May 2017: I did work on some of the steps above:</b>
 <ul>
-<li>refactor the timeout and dead time. - the timeout and dead time are quite ok now. If the door was opened once, the ir sensors
+<li><i>refactor the timeout and dead time.</i> - the timeout and dead time are quite ok now. If the door was opened once, the ir sensors
 	must not be active for two consecutive message broadcasts (minimum 5 sec. each) before a new detection can be started</li>
-<li>aquire lot of training images - Well i really have a lot now, but i might need them for training a second, better classifier</li>
-<li>train a classifier to detect the snout in the image - Did that, on a catsnout, i will link to some valuable resources for that</li>
-<li>do something to detect prey in the snout - I don't have concrete plans here - pray gets detected as I explain in details below</li>
-<li>atomically connect the sureflaps locking mechanism to the raspi or mount a servo on the locking mechanic. - the servo is mounted
+<li><i>aquire lot of training images</i> - Well i really have a lot now, but i might need them for training a second, better classifier</li>
+<li><i>train a classifier to detect the snout in the image</i> - Did that, on a catsnout, i will link to some valuable resources for that</li>
+<li><i>do something to detect prey in the snout</i> - I don't have concrete plans here - pray gets detected as I explain in details below</li>
+<li><i>atomically connect the sureflaps locking mechanism to the raspi or mount a servo on the locking mechanic.</i> - the servo is mounted
 	and operating</li>
-<li>install a second door before the RFID tunnel of the SureFlap - to keep the cat in the cameras field of view (The SureFlap has a
+<li><i>install a second door before the RFID tunnel of the SureFlap</i> - to keep the cat in the cameras field of view (The SureFlap has a
 	RFID tunnel of about 10cm in length before the door. The camera can't see the cats head when she is standing right in front of
 	the locked door, waiting for the lock to release. A second door, closing just with the end of the tunnel, mechanically connected
 	with the inner door should do the job to keep the cat in the field of view)</li>
-<li>create a new ros node for lock - release logic</li>
-<li>create a new node for mailing a thumbnail picture plus lock/release decision</li>
-<li>some more ideas will certainly come along</li>
+<li><i>create a new ros node for lock - release logic</i></li>
+	<li><i>create a new node for mailing a thumbnail picture plus lock/release decision</i></li>
+	<li><i>some more ideas will certainly come along</i></li>
 </ul>	     
 How detection and the door opening logic works:
 I trained a haar classifier on my cats snout.       
