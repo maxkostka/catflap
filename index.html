@@ -171,17 +171,67 @@ When a the IR sensors are active and the door is closed and an internal timeout 
 <p>The next steps are:</p>
 
 <ul>
-<li>refactor the timeout and dead time. The camera should detect, when a cat leaves the house and only start recording images, when the cat has left the housing for a certain time. So far it starts recording when the door was closed for a certain time.</li>
+<li>refactor the timeout and dead time. The camera should detect, when a cat leaves the house and only start recording images,
+	when the cat has left the housing for a certain time. So far it starts recording when the door was closed for a certain time.</li>
 <li>aquire lot of training images</li>
 <li>train a classifier to detect the snout in the image</li>
 <li>do something to detect prey in the snout - I don't have concrete plans here</li>
 <li>atomically connect the sureflaps locking mechanism to the raspi or mount a servo on the locking mechanic.</li>
-<li>install a second door before the RFID tunnel of the SureFlap - to keep the cat in the cameras field of view (The SureFlap has a RFID tunnel of about 10cm in length before the door. The camera can't see the cats head when she is standing right in front of the locked door, waiting for the lock to release. A second door, closing just with the end of the tunnel, mechanically connected with the inner door should do the job to keep the cat in the field of view)</li>
+<li>install a second door before the RFID tunnel of the SureFlap - to keep the cat in the cameras field of view (The SureFlap has
+	a RFID tunnel of about 10cm in length before the door. The camera can't see the cats head when she is standing right in
+	front of the locked door, waiting for the lock to release. A second door, closing just with the end of the tunnel, 
+	mechanically connected with the inner door should do the job to keep the cat in the field of view)</li>
 <li>create a new ros node for lock - release logic</li>
 <li>create a new node for mailing a thumbnail picture plus lock/release decision</li>
 <li>some more ideas will certainly come along</li>
 </ul>
-      </section>
+Update i did work on some of the steps above:
+<ul>
+<li>refactor the timeout and dead time. - the timeout and dead time are quite ok now. If the door was opened once, the ir sensors
+	must not be active for two consecutive message broadcasts (minimum 5 sec. each) before a new detection can be started</li>
+<li>aquire lot of training images - Well i really have a lot now, but i might need them for training a second, better classifier</li>
+<li>train a classifier to detect the snout in the image - Did that, on a catsnout, i will link to some valuable resources for that</li>
+<li>do something to detect prey in the snout - I don't have concrete plans here - pray gets detected as I explain in details below</li>
+<li>atomically connect the sureflaps locking mechanism to the raspi or mount a servo on the locking mechanic. - the servo is mounted
+	and operating</li>
+<li>install a second door before the RFID tunnel of the SureFlap - to keep the cat in the cameras field of view (The SureFlap has a
+	RFID tunnel of about 10cm in length before the door. The camera can't see the cats head when she is standing right in front of
+	the locked door, waiting for the lock to release. A second door, closing just with the end of the tunnel, mechanically connected
+	with the inner door should do the job to keep the cat in the field of view)</li>
+<li>create a new ros node for lock - release logic</li>
+<li>create a new node for mailing a thumbnail picture plus lock/release decision</li>
+<li>some more ideas will certainly come along</li>
+</ul>	     
+How detection and the door opening logic works:
+I trained a haar classifier on my cats snout.       
+catsnout.xml is the haar classifier for catsnouts trained with opencv.
+
+The classifier is used to look for catsnouts in each image taken.
+
+If a catsnout is found:
+The area of the catsnout (rectangle) and below (two times the catsnout
+rectangles height) is the region of interest for detection.
+The background is partly removed from the roi, then it is blurred and
+then thresholded with OTSUs method to get the biggest contour in this
+area (usually the catsnout and pray).
+If this contour is reaching down below the catsnout rectangle and
+takes up more pixels than a configurable threshold a pray is detected.
+
+If the contour does not reach down, or the area taken up is below the
+threshold, no pray is detected.
+
+Or there can be no catsnout found at all.
+
+The doorlock is operated on a trust value.
+The thre possible detection outcomes each have a configurable trust factor assigned. e.g.
+- catsnout detected, no pray       - factor 2.0
+- catsnout detected, pray detected - factor 0.33
+- no catsnout detected             - factor 0.95
+
+The momentary trust value is multiplied with the detection outcome factor.
+Starting value is 1.0
+The door opens if the trust value is above or equal to 4.0
+</section>
       <footer>
         <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
       </footer>
