@@ -16,7 +16,7 @@ def outer_ir_sensor_activated(outer_ir_sensor_pin):
     global state_publisher
     outer_ir_sensor_state = True
     state_publisher.publish(outer_ir_sensor_state)
-    rospy.logdebug('outer ir sensor was activated')
+    #rospy.logdebug('outer ir sensor was activated')
 
 def ir_sensor_outer_start():
     rospy.logdebug("outer ir sensor is started now")
@@ -33,7 +33,7 @@ def ir_sensor_outer_start():
     # define the publisher door_state
     state_publisher = rospy.Publisher('outer_ir_sensor_state', Bool, queue_size = 1)
     rospy.init_node('outer_irsensor',log_level=rospy.DEBUG)
-    rate = rospy.Rate(3)
+    rate = rospy.Rate(0.1)
 
     # publisher ready - add the edge detection - Falling edge means activation
     GPIO.add_event_detect(outer_ir_sensor_pin,GPIO.FALLING, callback = outer_ir_sensor_activated)

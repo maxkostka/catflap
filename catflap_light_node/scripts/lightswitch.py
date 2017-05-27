@@ -23,7 +23,7 @@ def lightswitch():
     GPIO.setup(lightpin,GPIO.OUT, initial=0)
     
     rospy.init_node('lightswitch',log_level=rospy.DEBUG)
-    rospy.Subscriber('lightswitch_command', Bool, callback)
+    rospy.Subscriber('lightswitch_command', Bool, callback, queue_size=10)
     rospy.logdebug('lightswitch is now ready to operate')
 
     # spin() simply keeps python from exiting until this node is stopped

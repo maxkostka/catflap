@@ -2,71 +2,88 @@
 
 import rospy
 from std_msgs.msg import Bool
-from time import localtime,strftime
-from datetime import datetime
-from picamera.array import PiRGBArray
-from picamera import PiCamera
-import cv2
-
+import camera
 
 class Take_a_picture_commander():
     def __init__(self):
         # define our state variables
-        self.door_state = False
-        self.timeout =  25
-        self.ir_state = False
+        self.door_closed = True
+        self.camera_blocked = False
+        self.timeout =  5
+        self.ir_state = 2
+        self.trust = 1.
+        self.trust_threshold = 4.
+        self.picture_sequence = 0
         # define the listeners and their callbacks
-        rospy.Subscriber("door_state",            Bool ,self.callback_door_sensor)
-        rospy.Subscriber("inner_ir_sensor_state", Bool ,self.callback_ir_sensor)
-        rospy.Subscriber("outer_ir_sensor_state", Bool ,self.callback_ir_sensor)
-        self.light_publisher = rospy.Publisher("lightswitch_command", Bool, queue_size=3)
+        rospy.Subscriber("door_closed_state",            Bool ,self.callback_door_sensor, queue_size = 1)
+        rospy.Subscriber("inner_ir_sensor_state", Bool ,self.callback_ir_sensor, queue_size = 1)
+        rospy.Subscriber("outer_ir_sensor_state", Bool ,self.callback_ir_sensor, queue_size = 1)
+        self.light_publisher = rospy.Publisher("lightswitch_command", Bool, queue_size=10)
         # start the publisher
         self.take_a_picture_publisher = rospy.Publisher('take_a_picture', Bool, queue_size = 1)
-        self.door_lock_publisher = rospy.Publisher('door_lock_command', Bool, queue_size = 1)
-        # initialize the camera and grab a reference to the raw camera capture
-        self.camera = PiCamera()
-        self.camera.resolution = (400, 300)
-        self.camera.rotation = 180
-        self.camera.framerate = 90
-        self.rawCapture = PiRGBArray(self.camera, size=(400, 300))
-
         self.light_publisher.publish(False)
-        self.door_lock_publisher.publish(False)
-        
+        self.door_lock_publisher = rospy.Publisher('door_lock_command', Bool, queue_size = 1)
+        self.door_lock_publisher.publish(True)
+        self.camera = camera.camera()
+        self.camera.camera_init()
+        self.camera.classifier_init()
         rospy.spin()
         
-    def callback_door_sensor(self, door_sensor_data):
-        if door_sensor_data.data == False:
+    def callback_door_sensor(self, door_closed_sensor_data):
+        #rospy.logdebug("door closed data: {0}".format(door_closed_sensor_data.data))
+        if door_closed_sensor_data.data == False:
+            if self.door_closed == True:
+                rospy.logdebug("door has been opened")
             # door open, do nothing, set the timeout
-            if self.timeout != 25:
-                self.timeout = 25
-                self.light_publisher.publish(False)
-            self.door_state = True
-            
+            if self.timeout != 5:
+                self.timeout = 5
+            self.door_closed = False
         else:
             # door closed, count down the timeout, if neccessary
             # further condition: only count down, if both sensors have been inactive - ir_state = 0
-            if self.timeout > 0 and self.ir_state == 0: self.timeout -= 1
-            self.door_state = False
+            if self.door_closed == False:
+                rospy.logdebug("door has been closed")
+            if self.timeout > 0 and self.ir_state == 0:
+                self.timeout -= 1
+                if self.timeout == 0:
+                    # reset the picture sequence
+                    self.picture_sequence = 0
+                    self.trust = 1.0
+                    rospy.logdebug("door closed a while, timeout reached, picture sequence reset")
+            self.door_closed = True
 
     def callback_ir_sensor(self, data):
-        if data.data and self.door_state == False and self.timeout < 1:
-            self.timeout = 4
+        #if data.data == False:
+        #    if self.
+        #rospy.logdebug("ir active: {0}; door closed: {1}; timeout: {2}".format(data.data,self.door_closed,self.timeout))
+        if data.data and self.door_closed == True and self.timeout < 1 and not self.camera_blocked:
+            rospy.logdebug("trust is at {}".format(self.trust))
+            self.camera_blocked = True
             self.light_publisher.publish(True)
-            self.take_a_picture_publisher.publish(True)
-            counter = 6
-            for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
-                self.image = frame.array
-                self.rawCapture.truncate(0)
-                counter -= 1
-                if counter < 1:
-                    break
+            #rospy.logdebug("picture will be taken")
+            (catsnout_detected, pray_detected) = self.camera.action()
+            if catsnout_detected:
+                if pray_detected:
+                    rospy.logdebug("pray detected")
+                    self.trust = self.trust * 0.33
+                    self.door_lock_publisher.publish(True)
+                else:
+                    rospy.logdebug("no pray detected")
+                    self.trust = self.trust * 2.
+                    if self.trust >= self.trust_threshold:
+                        rospy.logdebug("door opened, trust is {}".format(self.trust))
+                        self.door_lock_publisher.publish(False)
+            else:
+                self.picture_sequence += 1
+                self.trust = self.trust * 0.9
+                if self.picture_sequence > 25:
+                    rospy.logdebug("door opened after 25 no detections, trust at {}".format(self.trust))
+                    self.door_lock_publisher.publish(False)
+                else:
+                    self.door_lock_publisher.publish(True)
+                rospy.logdebug("no catsnout detected")
             self.light_publisher.publish(False)
-            n = datetime.now()
-            timestamp = "{0:04d}_{1:02d}_{2:02d}_{3:02d}_{4:02d}_{5:02d}_{6:01d}".format(n.year,n.month,n.day,n.hour,n.minute,n.second,int(n.microsecond/100000))
-            filename = "/home/max/Pictures/training/{0}.jpg".format(timestamp)
-            cv2.imwrite(filename,self.image)
-            print strftime("{0} {1} {2} {3}:{4}:{5} - picture taken").format(n.year,n.month,n.day,n.hour,n.minute,n.second)
+            self.camera_blocked = False
         # keep track of the ir states
         # both sensors send data in regular intervals
         # we want to keep track of situations, where one sensor maybe active
@@ -78,22 +95,22 @@ class Take_a_picture_commander():
             # we have a not active sensor, decrement the state until it's 0
             if self.ir_state > 0:  self.ir_state -= 1
             # state is zero after two consecutive False messages
-            
 
 if __name__ == '__main__':
     
-    rospy.init_node("take_a_picture_commander")
-    
-    try:
+    rospy.init_node("take_a_picture_commander",log_level=rospy.DEBUG)
+    if True:
+    #try:
         
         tapc_node = Take_a_picture_commander()
 
-    except rospy.ROSInterruptException:
-        # cleanup
-        tapc_node.light_publisher.publish(False)
-        pass
-    else:
-        # cleanupt
-        tapc_node.light_publisher.publish(False)
-        pass
+    #except rospy.ROSInterruptException:
+    #    rospy.loginfo("node shutdown by ROSINterruptException")
+    #except:
+    #    rospy.logerr("unhandled eception")
+    #finally:
+    #    # cleanup
+    #    tapc_node.door_lock_publisher.publish(False)
+    #    tapc_node.light_publisher.publish(False)
+    #    pass
 

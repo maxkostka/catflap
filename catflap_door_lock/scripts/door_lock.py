@@ -15,7 +15,7 @@ class Door_lock():
         self.locked = False
         self.lock()
         rospy.logdebug("door_lock is started now")
-        rospy.Subscriber('door_lock_command', Bool, self.callback_door_lock)
+        rospy.Subscriber('door_lock_command', Bool, self.callback_door_lock,queue_size=1)
         rospy.logdebug('door_lock is now ready to operate')
     
         # spin() simply keeps python from exiting until this node is stopped
@@ -59,11 +59,14 @@ class Door_lock():
 
     def callback_door_lock(self, data):
         # data is bool, lock = True, open = False
+        #rospy.logdebug("callback")
         if data.data == True and self.locked == False:
             self.lock()
         elif data.data == False and self.locked == True:
             self.open()
-
+            sleep(5)
+            self.lock()
+        #rospy.logdebug("callback ended")
         
 
 if __name__ == '__main__':
@@ -73,15 +76,12 @@ if __name__ == '__main__':
     try:
         door_lock_node = Door_lock()
     except rospy.ROSInterruptException:
-        #cleanup
-        door_lock_node.open()
-        rospy.logdebug('door_lock is going to be stopped now')
-        GPIO.cleanup(door_lock_node.servopin)
-        rospy.logdebug('door_lock stopped, GPIO cleaned up')
-        pass
-    else:
-        door_lock_node.open()
-        GPIO.cleanup(door_lock_node.servopin)
+        rospy.loginfo("rosnode shutdown by ROSInterruptException")
+#    except:
+#        rospy.logerr("unhandled exception")
+    finally:
+#        door_lock_node.open()
+        GPIO.cleanup()
         print "door_lock_node closed with an exception, GPIO cleaned up"
         rospy.logdebug('door_lock stopped with an exception, GPIO cleaned up')
         

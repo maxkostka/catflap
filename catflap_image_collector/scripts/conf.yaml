@@ -1,0 +1,22 @@
+camera:
+    resolution: !!python/tuple [400,300]
+    rotation: 180
+    framerate: 90
+    background_image: "/home/max/projects/catflap/bg.png"
+    classifier:
+        path: "/home/max/projects/catflap/catsnout.xml"
+        scale_factor: 1.1
+        minSize: !!python/tuple [100, 75]
+        maxSize: !!python/tuple [240, 195]
+        minNeighbors: 5
+    detection:
+        area_threshold: 200
+        height_cutoff: 0.8
+        trust:
+            no_detection_factor: 0.95
+            pray_detection_factor: 0.33
+            no_pray_detection_factor: 2.
+state_machine:
+    timeout: 5
+    not_cat_detected_sequence_threshold: 25
+    

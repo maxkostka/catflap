@@ -101,7 +101,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES catflap_irsensor_in
+#  LIBRARIES catflap_light_node
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
@@ -118,24 +118,24 @@ include_directories(
 )
 
 ## Declare a C++ library
-# add_library(catflap_irsensor_in
-#   src/${PROJECT_NAME}/catflap_irsensor_in.cpp
+# add_library(catflap_light_node
+#   src/${PROJECT_NAME}/catflap_light_node.cpp
 # )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(catflap_irsensor_in ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(catflap_light_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(catflap_irsensor_in_node src/catflap_irsensor_in_node.cpp)
+# add_executable(catflap_light_node_node src/catflap_light_node_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(catflap_irsensor_in_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(catflap_light_node_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(catflap_irsensor_in_node
+# target_link_libraries(catflap_light_node_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -154,7 +154,7 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS catflap_irsensor_in catflap_irsensor_in_node
+# install(TARGETS catflap_light_node catflap_light_node_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -179,7 +179,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_catflap_irsensor_in.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_catflap_light_node.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
