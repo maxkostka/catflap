@@ -1,245 +1,246 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Catflap by maxkostka</title>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<title>Catflap by maxkostka</title>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1 class="header">Catflap</h1>
-        <p class="header">Catflap with raspberry pi plus camera and image recognition to keep the cat from bringing prey inside</p>
+<link rel="stylesheet" href="stylesheets/styles.css">
+<link rel="stylesheet" href="stylesheets/github-light.css">
+<script src="javascripts/scale.fix.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1 class="header">Catflap</h1>
+    <p class="header">Catflap with raspberry pi plus camera and image recognition to keep the cat from bringing prey inside</p>
 
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/maxkostka/catflap/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/maxkostka/catflap/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/maxkostka/catflap">View On GitHub</a></li>
-        </ul>
+    <ul>
+      <li class="download"><a class="buttons" href="https://github.com/maxkostka/catflap/zipball/master">Download ZIP</a></li>
+      <li class="download"><a class="buttons" href="https://github.com/maxkostka/catflap/tarball/master">Download TAR</a></li>
+      <li><a class="buttons github" href="https://github.com/maxkostka/catflap">View On GitHub</a></li>
+    </ul>
 
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/maxkostka">maxkostka</a></p>
+    <p class="header">This project is maintained by <a class="header name" href="https://github.com/maxkostka">maxkostka</a></p>
 
 
-      </header>
-      <section>
-        <h1>
-<a id="catflap" class="anchor" href="#catflap" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>catflap</h1>
+  </header>
+  <section>
+    <h1>
+      <a id="catflap" class="anchor" href="#catflap" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>catflap</h1>
 
-<p>The catflap for detecting prey in the cats snout.
-Based on a raspberry pi 2 with the raspicam and the catflap sureflap.
-The raspberry runs ubuntu with ros indigo, python 2.x opencv.
-The system has 4 sensors, two ir sensors to detect the presence of a cat in the catflap tunnel, a sensor to check, whether the status of the flap and a camera to take pictures of the cats profile.</p>
+    <p>The catflap for detecting prey in the cats snout.
+    Based on a raspberry pi 2 with the raspicam and the catflap sureflap.
+    The raspberry runs ubuntu with ros indigo, python 2.x opencv.
+    The system has 4 sensors, two ir sensors to detect the presence of a cat in the catflap tunnel, a sensor to check, whether the status of the flap and a camera to take pictures of the cats profile.</p>
 
-<p>I further think that the original idea was not created by the three youngsters or at least they were not the only ones.
-I was further inspired by joakim soderberg and the catcierge <a href="https://joakimsoderberg.github.io/catcierge/">https://joakimsoderberg.github.io/catcierge/</a> (Nice work Joakim!) and the flow control project which can no longer be found on the web (origial url: <a href="http://www.quantumpicture.com/Flo_Control/flo_control.htm">http://www.quantumpicture.com/Flo_Control/flo_control.htm</a>) but we can find some remaints of its impact on others <a href="http://www.openscience.org/blog/?p=109">http://www.openscience.org/blog/?p=109</a>.</p>
+    <p>I further think that the original idea was not created by the three youngsters or at least they were not the only ones.
+    I was further inspired by joakim soderberg and the catcierge <a href="https://joakimsoderberg.github.io/catcierge/">https://joakimsoderberg.github.io/catcierge/</a> (Nice work Joakim!) and the flow control project which can no longer be found on the web (origial url: <a href="http://www.quantumpicture.com/Flo_Control/flo_control.htm">http://www.quantumpicture.com/Flo_Control/flo_control.htm</a>) but we can find some remaints of its impact on others <a href="http://www.openscience.org/blog/?p=109">http://www.openscience.org/blog/?p=109</a>.</p>
 
-<p>Some time after the flo control project, three germans participated in a contest called 'jugend forscht' <a href="http://www.neumarktonline.de/art.php?newsid=59507">http://www.neumarktonline.de/art.php?newsid=59507</a>) with a simpler concept only using light barriers. The price was patent application <a href="http://www.freepatentsonline.com/DE202009002677.html">http://www.freepatentsonline.com/DE202009002677.html</a> which is currently owned by the Feldberglicht GmbH. They are still developing a commercial application or at least the say they are developing- check it out <a href="http://www.mouse-lock.de/">http://www.mouse-lock.de/</a>. But don't expect a working catflap before a working fusion reactor ;)</p>
+    <p>Some time after the flo control project, three germans participated in a contest called 'jugend forscht' <a href="http://www.neumarktonline.de/art.php?newsid=59507">http://www.neumarktonline.de/art.php?newsid=59507</a>) with a simpler concept only using light barriers. The price was patent application <a href="http://www.freepatentsonline.com/DE202009002677.html">http://www.freepatentsonline.com/DE202009002677.html</a> which is currently owned by the Feldberglicht GmbH. They are still developing a commercial application or at least the say they are developing- check it out <a href="http://www.mouse-lock.de/">http://www.mouse-lock.de/</a>. But don't expect a working catflap before a working fusion reactor ;)</p>
 
-<p>usage so far</p>
+    <p>usage so far</p>
 
-<ul>
-<li>setup a raspi 2 with ubuntu, ros, opencv raspi cam and the sensors. adapt the GPIO Pins, if neccessary.</li>
-<li>clone the repo into a ros workspace and build it</li>
-<li>start the single nodes to check your hardware</li>
-<li>if all is working fine, use the launch file for everything
-<code>roslaunch catflap_training.launch</code>
-to start the ros nodes to aquire images, when a cat passes the flap</li>
-</ul>
+    <ul>
+      <li>setup a raspi 2 with ubuntu, ros, opencv raspi cam and the sensors. adapt the GPIO Pins, if neccessary.</li>
+      <li>clone the repo into a ros workspace and build it</li>
+      <li>start the single nodes to check your hardware</li>
+      <li>if all is working fine, use the launch file for everything
+      <code>roslaunch catflap_training.launch</code>
+      to start the ros nodes to aquire images, when a cat passes the flap</li>
+    </ul>
 
-<p>i added the startup.sh via
-<code>sudo crontab -e</code>
-just add a line like 
-<code>@reboot /home/max/projects/catflap/ros_catkin_ws/src/startup.sh &gt;&gt;/home/max/projects/catflap/log_launch 2&gt;&amp;1</code>
-to start it at when the raspi boots up.</p>
+    <p>i added the startup.sh via
+    <code>sudo crontab -e</code>
+    just add a line like 
+    <code>@reboot /home/max/projects/catflap/ros_catkin_ws/src/startup.sh &gt;&gt;/home/max/projects/catflap/log_launch 2&gt;&amp;1</code>
+    to start it at when the raspi boots up.</p>
 
-<p>What it looks like:
-<figure>
-<img src="./images/catflap.jpg" alt="charlie and her catflap" rotate="90">
-<figcaption>Charlie in front of her catflap</figcaption>
-</figure>
-	
-<figure>
-<img src="./images/from_inside_1.jpg" alt="catflap seen from inside">
-<figcaption>View from inside, light on, door closed</figcaption>
-</figure>
-	
-<figure>
-<img src="./images/from_inside_2_backlight.jpg" alt="catflap open - backlight on">
-<figcaption>door opened, backlight can be seen</figcaption>
-</figure>
+    <p>What it looks like:
+    <figure>
+      <img src="./images/catflap.jpg" alt="charlie and her catflap" rotate="90">
+      <figcaption>Charlie in front of her catflap</figcaption>
+    </figure>
 
-<figure>
-<img src="./images/peek_inside_right_ir_sensor.jpg" alt="peek through to the right - outer ir sensor">
-<figcaption>peeking through the door, looking at one of the IR sensors</figcaption>
-</figure>
-	
-<figure>
-<img src="./images/peek_inside_right%20side_raspi_cam.jpg" alt="peek through, look to the right raspi cam">
-<figcaption>peeking further trough, looking to the right, on the right side, the raspi cam housing.
-The raspi is mountet on a wooden board to the left. Reflections can be seen in the plexiglass plate that shall
-	keep the wiring save :)</figcaption>
-</figure>
+    <figure>
+      <img src="./images/from_inside_1.jpg" alt="catflap seen from inside">
+      <figcaption>View from inside, light on, door closed</figcaption>
+    </figure>
 
-<figure>
-<img src="./images/cat_inspection_1.jpg" alt="charlie inspecting the catflap">
-<figcaption>Charlie inspects the catflap</figcaption>
-</figure>
+    <figure>
+      <img src="./images/from_inside_2_backlight.jpg" alt="catflap open - backlight on">
+      <figcaption>door opened, backlight can be seen</figcaption>
+    </figure>
 
-<figure>
-<img src="./images/cat_inspection_2.jpg" alt="charlie inspecting the catflap">
-<figcaption>something new here</figcaption>
-</figure>
+    <figure>
+      <img src="./images/peek_inside_right_ir_sensor.jpg" alt="peek through to the right - outer ir sensor">
+      <figcaption>peeking through the door, looking at one of the IR sensors</figcaption>
+    </figure>
 
-<figure>
-<img src="./images/raspi_prototype_backlight.jpeg" alt="build phase - testing the backlight">
-<figcaption>backlight during build phase</figcaption>
-</figure>
+    <figure>
+      <img src="./images/peek_inside_right%20side_raspi_cam.jpg" alt="peek through, look to the right raspi cam">
+      <figcaption>peeking further trough, looking to the right, on the right side, the raspi cam housing.
+      The raspi is mountet on a wooden board to the left. Reflections can be seen in the plexiglass plate that shall
+      keep the wiring save :)</figcaption>
+    </figure>
 
-<h1>
-<a id="why-i-need-a-catflap-and-how-i-thought-it-should-work" class="anchor" href="#why-i-need-a-catflap-and-how-i-thought-it-should-work" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why I need a catflap and how i thought it should work</h1>
-<p>My work is based on a SureFlap catflap that I bought three years ago. It has the feature to learn the signature of
-	certain RFID devices which are used to tag cats, and release the catflap lock only for known RFID signatures.</p>
-<p>I bought the catflap as it has a convenient locking mechanism included. We had two cats at that time. They embraced their
-	freedom to come and leave as they wanted and - as any decent cat would do - brought back prey from time to time as a
-	present - as a proof of their love. I planned on stopping the - to me sometimes very disgusting - presents with a
-	raspberry pi I had at home. The idea was to pictures of the cat before it enters the flap, and with some image
-	recognition, release the lock only when there is no prey in the cats snout. I build a housing to mount it in front
-	of my catflap, which contained the raspberry pi together with the raspi cam, two ir sensors mounted at the entrance
-	of the housing an a IR LED spotlight behind the camera, lighting the cat that enters.</p>
-<p>After a while I switched to a setup using backlight and modified my housing accordingly, as my plans were to work on
-	black and white images of the cats contours. I want to show you two images with very nice presents:)</p>
-<figure>
-<img src="./images/prototype1_prey_1.png" alt="my cat Socke with a mouse">
-<figcaption>a small mouse, i don't remember if it was a living or a dead mouse</figcaption>
-</figure>
-<figure>
-<img src="./images/prototype1_prey_2.png" alt="dont know which cat with gutted blackbird">
-<figcaption>gutted blackbird, definitely dead</figcaption>
-</figure>
-<p>Unfortunately, my cat Luigi was hit by a cat and died, and the other cat Socke lived with us for some more months. At
-	some day she just didn't return home. We never found out what happened to her, hopefully she just found a new home.
-So this was the end of the catflap plans - prototype one.</p>
+    <figure>
+      <img src="./images/cat_inspection_1.jpg" alt="charlie inspecting the catflap">
+      <figcaption>Charlie inspects the catflap</figcaption>
+    </figure>
 
-<h1>
-<a id="the-new-cats-on-the-block" class="anchor" href="#the-new-cats-on-the-block" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The new cats on the block</h1>
+    <figure>
+      <img src="./images/cat_inspection_2.jpg" alt="charlie inspecting the catflap">
+      <figcaption>something new here</figcaption>
+    </figure>
 
-<p>A little down the road we decided to get two new cats. Since Socke and Luigi had a lot of bad luck, we did not want to let
-them go outdoors. Bad luck did not end here, one of the two, called Kitty died soon after we got her
-	(<a href="https://en.wikipedia.org/wiki/Feline_infectious_peritonitis">FIP</a>) So we were a one cat household
-	with an indoor cat.</p>
-<p>But a little further down the road our household got a new fellow lodger, the cutest baby in the world :) And things got
-worse with our cat Charlie. She simply has a loooooot of energy that she could not for her life shake off during her day
-or her night. So after some artistic high speed stunts involving rayor sharp claws very close to our baby we decided that
-Charlie should indeed be an outdoor cat again. This time the catflap would lead her to the garden, and not he front door,
-minimizing the need to cross the street there and the according risks of getting hit by a cat or something.
-<p>In her first night out our cat must have been replaced by someone or at least brainwashed. The standoffish cat left
-and a snuggly cat returned home. But it's ok for us, she still looks the same:)</p>
+    <figure>
+      <img src="./images/raspi_prototype_backlight.jpeg" alt="build phase - testing the backlight">
+      <figcaption>backlight during build phase</figcaption>
+    </figure>
 
-<h1>
-<a id="time-for-a-new-catflap-prototype" class="anchor" href="#time-for-a-new-catflap-prototype" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Time for a new catflap prototype</h1>
+    <h1>
+      <a id="why-i-need-a-catflap-and-how-i-thought-it-should-work" class="anchor" href="#why-i-need-a-catflap-and-how-i-thought-it-should-work" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why I need a catflap and how i thought it should work</h1>
+    <p>My work is based on a SureFlap catflap that I bought three years ago. It has the feature to learn the signature of
+    certain RFID devices which are used to tag cats, and release the catflap lock only for known RFID signatures.</p>
+    <p>I bought the catflap as it has a convenient locking mechanism included. We had two cats at that time. They embraced their
+    freedom to come and leave as they wanted and - as any decent cat would do - brought back prey from time to time as a
+    present - as a proof of their love. I planned on stopping the - to me sometimes very disgusting - presents with a
+    raspberry pi I had at home. The idea was to pictures of the cat before it enters the flap, and with some image
+    recognition, release the lock only when there is no prey in the cats snout. I build a housing to mount it in front
+    of my catflap, which contained the raspberry pi together with the raspi cam, two ir sensors mounted at the entrance
+    of the housing an a IR LED spotlight behind the camera, lighting the cat that enters.</p>
+    <p>After a while I switched to a setup using backlight and modified my housing accordingly, as my plans were to work on
+    black and white images of the cats contours. I want to show you two images with very nice presents:)</p>
+    <figure>
+      <img src="./images/prototype1_prey_1.png" alt="my cat Socke with a mouse">
+      <figcaption>a small mouse, i don't remember if it was a living or a dead mouse</figcaption>
+    </figure>
+    <figure>
+      <img src="./images/prototype1_prey_2.png" alt="dont know which cat with gutted blackbird">
+      <figcaption>gutted blackbird, definitely dead</figcaption>
+    </figure>
+    <p>Unfortunately, my cat Luigi was hit by a cat and died, and the other cat Socke lived with us for some more months. At
+    some day she just didn't return home. We never found out what happened to her, hopefully she just found a new home.
+    So this was the end of the catflap plans - prototype one.</p>
 
-<p>Considering the energy Charlie displayed so far I expected her to bring home a small deer or one of the neighbours
-	dogs at least on one of her next next nightly tours. we were lucky so far, she only brought in small insects.</p>
-<figure>
-	<img src="./images/charlie_insect.jpg" alt="charlie bringing home a small insect">
-	<figcaption>Charlie bringing home a small insect</figcaption>
-</figure>
+    <h1>
+      <a id="the-new-cats-on-the-block" class="anchor" href="#the-new-cats-on-the-block" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The new cats on the block</h1>
 
-<p>In the meantime a raspberry pi 2 was bought, a new housing was constructed and I heard about ros and wanted to try it out.
-	And here we are with the catflap. Right now it can aquire images, when a cat enters the door and does not take
-	pictures when the door is already open, or when a cat is leaving the house.</p>
+    <p>A little down the road we decided to get two new cats. Since Socke and Luigi had a lot of bad luck, we did not want to let
+    them go outdoors. Bad luck did not end here, one of the two, called Kitty died soon after we got her
+    (<a href="https://en.wikipedia.org/wiki/Feline_infectious_peritonitis">FIP</a>) So we were a one cat household
+    with an indoor cat.</p>
+    <p>But a little further down the road our household got a new fellow lodger, the cutest baby in the world :) And things got
+    worse with our cat Charlie. She simply has a loooooot of energy that she could not for her life shake off during her day
+    or her night. So after some artistic high speed stunts involving rayor sharp claws very close to our baby we decided that
+    Charlie should indeed be an outdoor cat again. This time the catflap would lead her to the garden, and not he front door,
+    minimizing the need to cross the street there and the according risks of getting hit by a cat or something.
+    <p>In her first night out our cat must have been replaced by someone or at least brainwashed. The standoffish cat left
+    and a snuggly cat returned home. But it's ok for us, she still looks the same:)</p>
 
-<h1>
-<a id="how-the-protoype-works-right-now" class="anchor" href="#how-the-protoype-works-right-now" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How the protoype works right now:</h1>
+    <h1>
+      <a id="time-for-a-new-catflap-prototype" class="anchor" href="#time-for-a-new-catflap-prototype" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Time for a new catflap prototype</h1>
 
-<p>Two IR sensors detect when Charlie enters the housing. A door sensor detects, if the door is closed or open.
-When a the IR sensors are active and the door is closed and an internal timeout has elapsed, the backlight is turned on
-	and an image is recorded, saved, and the backlight is turned off. A timeout is set to a certain short period then
-	(under a second). If the IR sensors are still active, the door is still closed when the timeout has elapsed, the
-	light is turned on again, image recorded ... timeout is set again ... and so on until the door is opened.</p>
-<p>As long as the door is open no image will be recorded. When the door closes, a timeout is set to a certain long
-	period to get a certain dead time (about 5 seconds).</p>
+    <p>Considering the energy Charlie displayed so far I expected her to bring home a small deer or one of the neighbours
+    dogs at least on one of her next next nightly tours. we were lucky so far, she only brought in small insects.</p>
+    <figure>
+      <img src="./images/charlie_insect.jpg" alt="charlie bringing home a small insect">
+      <figcaption>Charlie bringing home a small insect</figcaption>
+    </figure>
 
-<p>The next steps are:</p>
+    <p>In the meantime a raspberry pi 2 was bought, a new housing was constructed and I heard about ros and wanted to try it out.
+    And here we are with the catflap. Right now it can aquire images, when a cat enters the door and does not take
+    pictures when the door is already open, or when a cat is leaving the house.</p>
 
-<ul>
-<li>refactor the timeout and dead time. The camera should detect, when a cat leaves the house and only start recording images,
-	when the cat has left the housing for a certain time. So far it starts recording when the door was closed for a certain time.</li>
-<li>aquire lot of training images</li>
-<li>train a classifier to detect the snout in the image</li>
-<li>do something to detect prey in the snout - I don't have concrete plans here</li>
-<li>atomically connect the sureflaps locking mechanism to the raspi or mount a servo on the locking mechanic.</li>
-<li>install a second door before the RFID tunnel of the SureFlap - to keep the cat in the cameras field of view (The SureFlap has
-	a RFID tunnel of about 10cm in length before the door. The camera can't see the cats head when she is standing right in
-	front of the locked door, waiting for the lock to release. A second door, closing just with the end of the tunnel, 
-	mechanically connected with the inner door should do the job to keep the cat in the field of view)</li>
-<li>create a new ros node for lock - release logic</li>
-<li>create a new node for mailing a thumbnail picture plus lock/release decision</li>
-<li>some more ideas will certainly come along</li>
-</ul>
-	      <b>Update May 2017: I did work on some of the steps above:</b>
-<ul>
-<li><i>refactor the timeout and dead time.</i> - the timeout and dead time are quite ok now. If the door was opened once, the ir sensors
-	must not be active for two consecutive message broadcasts (minimum 5 sec. each) before a new detection can be started</li>
-<li><i>aquire lot of training images</i> - Well i really have a lot now, but i might need them for training a second, better classifier</li>
-<li><i>train a classifier to detect the snout in the image</i> - Did that, on a catsnout, i will link to some valuable resources for that</li>
-<li><i>do something to detect prey in the snout</i> - I don't have concrete plans here - pray gets detected as I explain in details below</li>
-<li><i>atomically connect the sureflaps locking mechanism to the raspi or mount a servo on the locking mechanic.</i> - the servo is mounted
-	and operating</li>
-<li><i>install a second door before the RFID tunnel of the SureFlap</i> - to keep the cat in the cameras field of view (The SureFlap has a
-	RFID tunnel of about 10cm in length before the door. The camera can't see the cats head when she is standing right in front of
-	the locked door, waiting for the lock to release. A second door, closing just with the end of the tunnel, mechanically connected
-	with the inner door should do the job to keep the cat in the field of view)</li>
-<li><i>create a new ros node for lock - release logic</i></li>
-	<li><i>create a new node for mailing a thumbnail picture plus lock/release decision</i></li>
-	<li><i>some more ideas will certainly come along</i></li>
-</ul>	     
-How detection and the door opening logic works:
-I trained a haar classifier on my cats snout.       
-catsnout.xml is the haar classifier for catsnouts trained with opencv.
-	      (with the help of <a href="https://github.com/mrnugget/opencv-haar-classifier-training">Thorsten Ball</a>,
-	      <a href="http://coding-robin.de/2013/07/22/train-your-own-opencv-haar-classifier.html">here too</a> and
-	      <a href="http://www.trevorsherrard.com/Haar_training.html">Trevor Sherrard</a>)
+    <h1>
+      <a id="how-the-protoype-works-right-now" class="anchor" href="#how-the-protoype-works-right-now" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How the protoype works right now:</h1>
 
-The classifier is used to look for catsnouts in each image taken.
+    <p>Two IR sensors detect when Charlie enters the housing. A door sensor detects, if the door is closed or open.
+    When a the IR sensors are active and the door is closed and an internal timeout has elapsed, the backlight is turned on
+    and an image is recorded, saved, and the backlight is turned off. A timeout is set to a certain short period then
+    (under a second). If the IR sensors are still active, the door is still closed when the timeout has elapsed, the
+    light is turned on again, image recorded ... timeout is set again ... and so on until the door is opened.</p>
+    <p>As long as the door is open no image will be recorded. When the door closes, a timeout is set to a certain long
+    period to get a certain dead time (about 5 seconds).</p>
 
-If a catsnout is found:
-The area of the catsnout (rectangle) and below (two times the catsnout
-rectangles height) is the region of interest for detection.
-The background is partly removed from the roi, then it is blurred and
-then thresholded with OTSUs method to get the biggest contour in this
-area (usually the catsnout and pray).
-If this contour is reaching down below the catsnout rectangle and
-takes up more pixels than a configurable threshold a pray is detected.
+    <p>The next steps are:</p>
 
-If the contour does not reach down, or the area taken up is below the
-threshold, no pray is detected.
+    <ul>
+      <li>refactor the timeout and dead time. The camera should detect, when a cat leaves the house and only start recording images,
+      when the cat has left the housing for a certain time. So far it starts recording when the door was closed for a certain time.</li>
+      <li>aquire lot of training images</li>
+      <li>train a classifier to detect the snout in the image</li>
+      <li>do something to detect prey in the snout - I don't have concrete plans here</li>
+      <li>atomically connect the sureflaps locking mechanism to the raspi or mount a servo on the locking mechanic.</li>
+      <li>install a second door before the RFID tunnel of the SureFlap - to keep the cat in the cameras field of view (The SureFlap has
+      a RFID tunnel of about 10cm in length before the door. The camera can't see the cats head when she is standing right in
+      front of the locked door, waiting for the lock to release. A second door, closing just with the end of the tunnel, 
+      mechanically connected with the inner door should do the job to keep the cat in the field of view)</li>
+      <li>create a new ros node for lock - release logic</li>
+      <li>create a new node for mailing a thumbnail picture plus lock/release decision</li>
+      <li>some more ideas will certainly come along</li>
+    </ul>
+    <b>Update May 2017: I did work on some of the steps above:</b>
+    <ul>
+      <li><i>refactor the timeout and dead time.</i> - the timeout and dead time are quite ok now. If the door was opened once, the ir sensors
+      must not be active for two consecutive message broadcasts (minimum 5 sec. each) before a new detection can be started</li>
+      <li><i>aquire lot of training images</i> - Well i really have a lot now, but i might need them for training a second, better classifier</li>
+      <li><i>train a classifier to detect the snout in the image</i> - Did that, on a catsnout, i will link to some valuable resources for that</li>
+      <li><i>do something to detect prey in the snout</i> - I don't have concrete plans here - pray gets detected as I explain in details below</li>
+      <li><i>atomically connect the sureflaps locking mechanism to the raspi or mount a servo on the locking mechanic.</i> - the servo is mounted
+      and operating</li>
+      <li><i>install a second door before the RFID tunnel of the SureFlap</i> - to keep the cat in the cameras field of view (The SureFlap has a
+      RFID tunnel of about 10cm in length before the door. The camera can't see the cats head when she is standing right in front of
+      the locked door, waiting for the lock to release. A second door, closing just with the end of the tunnel, mechanically connected
+      with the inner door should do the job to keep the cat in the field of view)</li>
+      <li><i>create a new ros node for lock - release logic</i></li>
+      <li><i>create a new node for mailing a thumbnail picture plus lock/release decision</i></li>
+      <li><i>some more ideas will certainly come along</i></li>
+    </ul>	     
+    How detection and the door opening logic works:
+    I trained a haar classifier on my cats snout.       
+    catsnout.xml is the haar classifier for catsnouts trained with opencv.
+    (with the help of <a href="https://github.com/mrnugget/opencv-haar-classifier-training">Thorsten Ball</a>,
+    <a href="http://coding-robin.de/2013/07/22/train-your-own-opencv-haar-classifier.html">here too</a> and
+    <a href="http://www.trevorsherrard.com/Haar_training.html">Trevor Sherrard</a>)
 
-Or there can be no catsnout found at all.
+    The classifier is used to look for catsnouts in each image taken.
 
-The doorlock is operated on a trust value.
-The thre possible detection outcomes each have a configurable trust factor assigned. e.g.
-- catsnout detected, no pray       - factor 2.0
-- catsnout detected, pray detected - factor 0.33
-- no catsnout detected             - factor 0.95
+    If a catsnout is found:
+    The area of the catsnout (rectangle) and below (two times the catsnout
+    rectangles height) is the region of interest for detection.
+    The background is partly removed from the roi, then it is blurred and
+    then thresholded with OTSUs method to get the biggest contour in this
+    area (usually the catsnout and pray).
+    If this contour is reaching down below the catsnout rectangle and
+    takes up more pixels than a configurable threshold a pray is detected.
 
-The momentary trust value is multiplied with the detection outcome factor.
-Starting value is 1.0
-The door opens if the trust value is above or equal to 4.0
-</section>
-      <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
-    </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
-  </body>
+    If the contour does not reach down, or the area taken up is below the
+    threshold, no pray is detected.
+
+    Or there can be no catsnout found at all.
+
+    The doorlock is operated on a trust value.
+    The thre possible detection outcomes each have a configurable trust factor assigned. e.g.
+    <ul>
+      <li>catsnout detected, no pray       - factor 2.0</li>
+      <li>catsnout detected, pray detected - factor 0.33</li>
+      <li>no catsnout detected             - factor 0.95</li>
+    </ul>
+    The momentary trust value is multiplied with the detection outcome factor.
+    Starting value is 1.0
+    The door opens if the trust value is above or equal to 4.0
+  </section>
+  <footer>
+    <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+  </footer>
+</div>
+<!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
+</body>
 </html>
