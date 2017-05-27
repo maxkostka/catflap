@@ -48,6 +48,7 @@ The thre possible detection outcomes each have a configurable trust factor assig
 - catsnout detected, no pray       - factor 2.0
 - catsnout detected, pray detected - factor 0.33
 - no catsnout detected             - factor 0.95
+
 The momentary trust value is multiplied with the detection outcome factor.
 Starting value is 1.0
 The door opens if the trust value is above or equal to 4.0
