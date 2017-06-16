@@ -6,14 +6,17 @@ from picamera import PiCamera
 import cv2
 import numpy as np
 import yaml
-
-
+import rospy
+from std_msgs.msg import String
 class camera():
 
     def __init__(self):
         conf_file = open("/home/max/projects/catflap/ros_catkin_ws/src/catflap_image_collector/scripts/conf.yaml", 'r')
         self.cfg = yaml.load(conf_file)
         conf_file.close()
+        self.telegram_publisher = rospy.Publisher('telegram_message', String, queue_size = 150)
+        self.telegram_publisher.publish("catflap startup")
+
             
     def camera_init(self):
         self.camera            = PiCamera()
@@ -81,6 +84,8 @@ class camera():
         timestamp = "{0:04d}_{1:02d}_{2:02d}_{3:02d}_{4:02d}_{5:02d}_{6:01d}".format(n.year,n.month,n.day,n.hour,n.minute,n.second,int(n.microsecond/100000))
         filename = "/home/max/Pictures/raw/{0}.png".format(timestamp)
         cv2.imwrite(filename,self.image)
+
+        telebot_message = "no catsnout detected"
         ## detection
         rects = self.cascade.detectMultiScale(self.image,
                 scaleFactor = 1.1, minNeighbors = 5,
@@ -91,7 +96,7 @@ class camera():
             # reset picture sequence when catsnout was detected
             self.picture_sequence = 0
             for (x,y,w,h) in rects:
-                (x1, y1) = (x + w, y + h + h)
+                (x1, y1) = (x + int(w*4./5.), y + h + h)
                 if y1 > self.image.shape[0]:
                     y1 = self.image.shape[0]
                 # paint catsnout detection window in green
@@ -129,11 +134,15 @@ class camera():
             if pray_detected:
                 # draw detection in red
                 cv2.drawContours(self.image, [pray_cnt], -1, (0, 0, 255), thickness = 2)
+                telebot_message = "pray detected"
                 filename_mod = "/home/max/Pictures/classified/cat_pray/{0}_pray.png".format(timestamp)
             else:
+                telebot_message = "no pray detected"
                 filename_mod = "/home/max/Pictures/classified/cat_no_pray/{0}_no_pray.png".format(timestamp)
         else:
             filename_mod     = "/home/max/Pictures/classified/no_catsnout/{0}_no_catsnout.png".format(timestamp)
 
         cv2.imwrite(filename_mod,self.image)
+        self.telegram_publisher.publish(telebot_message)
+        self.telegram_publisher.publish(filename_mod)
         return (catsnout_detected, pray_detected)

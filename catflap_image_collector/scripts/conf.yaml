@@ -10,7 +10,7 @@ camera:
         maxSize: !!python/tuple [240, 195]
         minNeighbors: 5
     detection:
-        area_threshold: 200
+        area_threshold: 300
         height_cutoff: 0.8
         trust:
             no_detection_factor: 0.95
@@ -19,4 +19,3 @@ camera:
 state_machine:
     timeout: 5
     not_cat_detected_sequence_threshold: 25
-    

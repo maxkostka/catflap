@@ -2,26 +2,33 @@
 
 import rospy
 from std_msgs.msg import Bool
+from std_msgs.msg import String
 import camera
-
+import yaml
+    
 class Take_a_picture_commander():
     def __init__(self):
+        conf_file = open("/home/max/projects/catflap/ros_catkin_ws/src/catflap_image_collector/scripts/conf.yaml", 'r')
+        self.cfg = yaml.load(conf_file)
+        conf_file.close()
         # define our state variables
         self.door_closed = True
         self.camera_blocked = False
         self.timeout =  5
         self.ir_state = 2
         self.trust = 1.
-        self.trust_threshold = 4.
+        self.trust_threshold = 3.
         self.picture_sequence = 0
         # define the listeners and their callbacks
         rospy.Subscriber("door_closed_state",            Bool ,self.callback_door_sensor, queue_size = 1)
         rospy.Subscriber("inner_ir_sensor_state", Bool ,self.callback_ir_sensor, queue_size = 1)
         rospy.Subscriber("outer_ir_sensor_state", Bool ,self.callback_ir_sensor, queue_size = 1)
+        # start the publishers
         self.light_publisher = rospy.Publisher("lightswitch_command", Bool, queue_size=10)
-        # start the publisher
-        self.take_a_picture_publisher = rospy.Publisher('take_a_picture', Bool, queue_size = 1)
         self.light_publisher.publish(False)
+        self.take_a_picture_publisher = rospy.Publisher('take_a_picture', Bool, queue_size = 1)
+        self.telegram_publisher = rospy.Publisher('telegram_message', String, queue_size = 150)
+        self.telegram_publisher.publish("catflap startup")
         self.door_lock_publisher = rospy.Publisher('door_lock_command', Bool, queue_size = 1)
         self.door_lock_publisher.publish(True)
         self.camera = camera.camera()
@@ -49,6 +56,7 @@ class Take_a_picture_commander():
                     # reset the picture sequence
                     self.picture_sequence = 0
                     self.trust = 1.0
+                    self.telegram_publisher.publish("door timeout reached")
                     rospy.logdebug("door closed a while, timeout reached, picture sequence reset")
             self.door_closed = True
 
@@ -57,7 +65,6 @@ class Take_a_picture_commander():
         #    if self.
         #rospy.logdebug("ir active: {0}; door closed: {1}; timeout: {2}".format(data.data,self.door_closed,self.timeout))
         if data.data and self.door_closed == True and self.timeout < 1 and not self.camera_blocked:
-            rospy.logdebug("trust is at {}".format(self.trust))
             self.camera_blocked = True
             self.light_publisher.publish(True)
             #rospy.logdebug("picture will be taken")
@@ -71,17 +78,21 @@ class Take_a_picture_commander():
                     rospy.logdebug("no pray detected")
                     self.trust = self.trust * 2.
                     if self.trust >= self.trust_threshold:
+                        self.telegram_publisher.publish("door lock opened - no pray")
                         rospy.logdebug("door opened, trust is {}".format(self.trust))
                         self.door_lock_publisher.publish(False)
             else:
                 self.picture_sequence += 1
                 self.trust = self.trust * 0.9
-                if self.picture_sequence > 25:
-                    rospy.logdebug("door opened after 25 no detections, trust at {}".format(self.trust))
+                if self.picture_sequence > 45:
+                    self.telegram_publisher.publish("door lock opened after 45 no detections")
+                    rospy.logdebug("door opened after 45 no detections, trust at {}".format(self.trust))
                     self.door_lock_publisher.publish(False)
                 else:
                     self.door_lock_publisher.publish(True)
                 rospy.logdebug("no catsnout detected")
+            rospy.logdebug("trust is at {}".format(self.trust))
+            self.telegram_publisher.publish("trust is at {}".format(self.trust))
             self.light_publisher.publish(False)
             self.camera_blocked = False
         # keep track of the ir states
@@ -103,7 +114,6 @@ if __name__ == '__main__':
     #try:
         
         tapc_node = Take_a_picture_commander()
-
     #except rospy.ROSInterruptException:
     #    rospy.loginfo("node shutdown by ROSINterruptException")
     #except:
