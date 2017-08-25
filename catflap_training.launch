@@ -1,9 +1,9 @@
 <launch>
+    <node name="telegram_node" pkg="catflap_telegram_node" type="telegram_node.py"/>
+    <node name="door_lock" pkg="catflap_door_lock" type="door_lock.py"/>
+    <node name="lightswitch" pkg="catflap_light_node" type="lightswitch.py"/>
     <node name="inner_irsensor" pkg="catflap_irsensor_in" type="inner_irsensor.py"/>
     <node name="outer_irsensor" pkg="catflap_irsensor_out" type="outer_irsensor.py"/>
     <node name="doorsensor" pkg="catflap_door_sensor" type="door_sensor.py"/>
-    <node name="lightswitch" pkg="catflap_light_node" type="lightswitch.py"/>
-    <node name="telegram_node" pkg="catflap_telegram_node" type="telegram_node.py"/>
     <node name="take_a_picture_commander" pkg="catflap_image_collector" type="take_a_picture_commander.py"/>
-    <node name="door_lock" pkg="catflap_door_lock" type="door_lock.py"/>
 </launch>

@@ -14,8 +14,8 @@ camera:
         height_cutoff: 0.8
         trust:
             no_detection_factor: 0.95
-            pray_detection_factor: 0.33
-            no_pray_detection_factor: 2.
+            prey_detection_factor: 0.33
+            no_prey_detection_factor: 2.
 state_machine:
     timeout: 5
     not_cat_detected_sequence_threshold: 25

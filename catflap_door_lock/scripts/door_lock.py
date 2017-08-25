@@ -3,6 +3,7 @@
 import rospy
 import RPi.GPIO as GPIO
 from std_msgs.msg import Bool
+from std_msgs.msg import String
 from time import sleep
 # Pin number where the door_lock servo is connected to Raspi (BCM pin number)
 servopin = 5
@@ -13,11 +14,12 @@ class Door_lock():
         self.servopin = 5
         self.timeout = 25
         self.locked = False
+        self.telegram_publisher = rospy.Publisher('telegram_message', String, queue_size = 150)
         self.lock()
         rospy.logdebug("door_lock is started now")
         rospy.Subscriber('door_lock_command', Bool, self.callback_door_lock,queue_size=1)
         rospy.logdebug('door_lock is now ready to operate')
-    
+        self.telegram_publisher.publish("doorlock ready to operate")
         # spin() simply keeps python from exiting until this node is stopped
         rospy.spin()
 
@@ -38,6 +40,8 @@ class Door_lock():
         #print "opened"
         GPIO.cleanup(self.servopin)
         self.locked = False
+        self.telegram_publisher.publish("doorlock opened")
+
 
     def lock(self):
         #print "lock ..."
@@ -56,6 +60,7 @@ class Door_lock():
         #print "locked"
         GPIO.cleanup(self.servopin)
         self.locked = True
+        self.telegram_publisher.publish("doorlock locked")
 
     def callback_door_lock(self, data):
         # data is bool, lock = True, open = False
@@ -64,8 +69,8 @@ class Door_lock():
             self.lock()
         elif data.data == False and self.locked == True:
             self.open()
-            sleep(5)
-            self.lock()
+            #sleep(5)
+            #self.lock()
         #rospy.logdebug("callback ended")
         
 

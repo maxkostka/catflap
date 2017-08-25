@@ -15,7 +15,6 @@ class camera():
         self.cfg = yaml.load(conf_file)
         conf_file.close()
         self.telegram_publisher = rospy.Publisher('telegram_message', String, queue_size = 150)
-        self.telegram_publisher.publish("catflap startup")
 
             
     def camera_init(self):
@@ -24,31 +23,33 @@ class camera():
         self.camera.rotation   = self.cfg["camera"]["rotation"]
         self.camera.framerate  = self.cfg["camera"]["framerate"]
         self.rawCapture        = PiRGBArray(self.camera, size = self.cfg["camera"]["resolution"])
+        self.telegram_publisher.publish("camera init")
 
 
     def classifier_init(self):
         self.cascade = cv2.CascadeClassifier(self.cfg["camera"]["classifier"]["path"])
         bg_temp      = cv2.imread(self.cfg["camera"]["background_image"])
+        bg_temp      = bg_temp[:,150:390,:]
         self.bg      = cv2.cvtColor(bg_temp,cv2.COLOR_BGR2GRAY)
-        
+
     def get_cat_faces(self):
         pass
         
-    def detect_pray(self,cnt, h, area_threshold = 200):
+    def detect_prey(self,cnt, h, area_threshold = 200):
         # check if a contour reaches below height h
         # if the contour are below height h is above the threshold, return True
-        pray_detected = False
+        prey_detected = False
         ind_list = []
         for i, point in enumerate(cnt):
             if cnt[i][0][1] <= h:
                 ind_list.append(i)
-        pray_cnt = np.delete(cnt,ind_list,0)
-        if len(pray_cnt) > 0 and cv2.contourArea(pray_cnt) >= area_threshold:
-            pray_detected = True
+        prey_cnt = np.delete(cnt,ind_list,0)
+        if len(prey_cnt) > 0 and cv2.contourArea(prey_cnt) >= area_threshold:
+            prey_detected = True
         else:
-            pray_detected = False
+            prey_detected = False
     
-        return (pray_detected,pray_cnt)
+        return (prey_detected,prey_cnt)
     
     def move_cnts(self,cnt, x,y):
         #print "move cnt"
@@ -71,7 +72,7 @@ class camera():
     
     def action(self):
         # take a picture, detect
-        pray_detected = False
+        prey_detected = False
         catsnout_detected = False
         counter = 6
         for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
@@ -84,12 +85,14 @@ class camera():
         timestamp = "{0:04d}_{1:02d}_{2:02d}_{3:02d}_{4:02d}_{5:02d}_{6:01d}".format(n.year,n.month,n.day,n.hour,n.minute,n.second,int(n.microsecond/100000))
         filename = "/home/max/Pictures/raw/{0}.png".format(timestamp)
         cv2.imwrite(filename,self.image)
-
-        telebot_message = "no catsnout detected"
+        # region of interest, background area
+        self.image = self.image[:,150:390,:]
+        
+        #telebot_message = "no catsnout detected"
         ## detection
         rects = self.cascade.detectMultiScale(self.image,
                 scaleFactor = 1.1, minNeighbors = 5,
-                minSize = (100, 75), maxSize = (240, 195),
+                minSize = (67, 50), maxSize = (240, 195),
                 flags = cv2.CASCADE_SCALE_IMAGE)
         if rects != ():
             catsnout_detected = True
@@ -129,20 +132,20 @@ class camera():
             biggest_cnt_moved = self.move_cnts(biggest_cnt,x,y)
             # draw contour 
             cv2.drawContours(self.image, [biggest_cnt_moved], -1, (0, 60, 100), thickness = 1)
-            # detect pray
-            pray_detected, pray_cnt = self.detect_pray(biggest_cnt_moved, y + int(h/5*4))
-            if pray_detected:
+            # detect prey
+            prey_detected, prey_cnt = self.detect_prey(biggest_cnt_moved, y + int(h/5*4))
+            if prey_detected:
                 # draw detection in red
-                cv2.drawContours(self.image, [pray_cnt], -1, (0, 0, 255), thickness = 2)
-                telebot_message = "pray detected"
-                filename_mod = "/home/max/Pictures/classified/cat_pray/{0}_pray.png".format(timestamp)
+                cv2.drawContours(self.image, [prey_cnt], -1, (0, 0, 255), thickness = 2)
+                #telebot_message = "prey detected"
+                filename_mod = "/home/max/Pictures/classified/cat_prey/{0}_prey.png".format(timestamp)
             else:
-                telebot_message = "no pray detected"
-                filename_mod = "/home/max/Pictures/classified/cat_no_pray/{0}_no_pray.png".format(timestamp)
+                #telebot_message = "no prey detected"
+                filename_mod = "/home/max/Pictures/classified/cat_no_prey/{0}_no_prey.png".format(timestamp)
         else:
             filename_mod     = "/home/max/Pictures/classified/no_catsnout/{0}_no_catsnout.png".format(timestamp)
 
         cv2.imwrite(filename_mod,self.image)
-        self.telegram_publisher.publish(telebot_message)
+        #self.telegram_publisher.publish(telebot_message)
         self.telegram_publisher.publish(filename_mod)
-        return (catsnout_detected, pray_detected)
+        return (catsnout_detected, prey_detected)
