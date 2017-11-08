@@ -11,8 +11,8 @@ class Telegram_node():
 
     def handle_incoming_msg(self,msg):
         content_type, chat_type, chat_id = telepot.glance(msg)
-
-        if chat_id == self.cfg['id'] and content_type == 'text':
+        # only reply to max
+        if chat_id == self.mid and content_type == 'text':
             self.bot.sendMessage(self.mid,"received:{}".format(msg['text']))
             if msg['text'] == "/lock":
                 self.door_lock_publisher.publish(True)
@@ -21,11 +21,10 @@ class Telegram_node():
             if msg['text'] == "/photo":
                 self.ir_publisher.publish(True)
         else:
-            if content_type != 'text' and chat_id == self.cfg['id']:
+            if content_type != 'text' and chat_id in self.knownIDs:
                 self.bot.sendMessage(self.mid,"stop sending me {}s, please. I wont use anything like that.".format(content_type))
-            elif content_type != 'text' and chat_id != self.cfg['id']:
-                self.bot.sendMessage(chat_id,"Hi. Nice that you sent me a message. I will notify my master.")
-            if chat_id != self.cfg['id']:
+            if chat_id not in self.knownIDs:
+                self.bot.sendMessage(chat_id,"Hi. Nice that you sent me a message. I will notify my master, so he may contact you.")
                 self.bot.sendMessage(self.mid,"id {0}, name {1} sent me a msg. I will forward it to you".format(chat_id,msg['chat']['first_name']))
                 self.bot.forwardMessage(self.mid,chat_id,msg['message_id'])
 
@@ -36,8 +35,12 @@ class Telegram_node():
             file_handle = open(data.data)
             self.bot.sendPhoto(self.mid,file_handle)
             file_handle.close()    
+            file_handle = open(data.data)
+            self.bot.sendPhoto(self.cfg['andre']['id'],file_handle)
+            file_handle.close()    
         else:
             self.bot.sendMessage(self.mid,data.data)
+            self.bot.sendMessage(self.cfg['andre']['id'],data.data)
 
     def __init__(self):
         conf_file = open("/home/max/projects/catflap/ros_catkin_ws/src/catflap_telegram_node/scripts/conf.yaml", 'r')
@@ -45,9 +48,10 @@ class Telegram_node():
         conf_file.close()
         rospy.logdebug("telegram node is started now")
         
-        telepot_token = self.cfg["token"]
+        telepot_token = self.cfg['bot']['token']
         self.bot = telepot.Bot(telepot_token)
-        self.mid = self.cfg["id"]
+        self.mid = self.cfg['max']['id']
+        self.knownIDs = [self.cfg['max']['id'],self.cfg['andre']['id']]
 
         rospy.init_node('telegram_node',log_level=rospy.DEBUG)
         rospy.Subscriber('telegram_message', String, self.callback, queue_size=150)

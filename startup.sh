@@ -1,5 +1,22 @@
 #! /bin/bash
 sleep 1
+WLAN_IP="$(ip a | sed -rn '/: 'wlan0':.*state UP/{N;N;s/.*inet (\S*).*/\1/p}')"
+# wait for wlan0 to come up for max 180s
+counter=180
+while [ -z "$WLAN_IP" ] && [ $counter -gt 1 ]
+do
+    echo "wlan0 down. checking for $counter more seconds"
+    sleep 5
+    WLAN_IP="$(ip a | sed -rn '/: 'wlan0':.*state UP/{N;N;s/.*inet (\S*).*/\1/p}')"
+    ((counter-=5))
+done
+if [ -n "$WLAN_IP" ]
+then
+    echo "wlan0 has a valid ip address $WLAN_IP."
+else
+    echo "wlan0 has no valid ip."
+fi
+
 echo "exporting ROS env variables"
 export ROS_ROOT=/opt/ros/indigo/share/ros
 export ROS_PACKAGE_PATH=/home/max/projects/catflap/ros_catkin_ws/src:/opt/ros/indigo/share:/opt/ros/indigo/stacks
