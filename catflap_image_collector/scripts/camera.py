@@ -8,6 +8,9 @@ import numpy as np
 import yaml
 import rospy
 from std_msgs.msg import String
+from threading import Lock
+import sys
+
 class camera():
 
     def __init__(self):
@@ -24,7 +27,7 @@ class camera():
         self.camera.framerate  = self.cfg["camera"]["framerate"]
         self.rawCapture        = PiRGBArray(self.camera, size = self.cfg["camera"]["resolution"])
         self.telegram_publisher.publish("camera init")
-
+        self.lock = Lock()
 
     def classifier_init(self):
         self.cascade = cv2.CascadeClassifier(self.cfg["camera"]["classifier"]["path"])
@@ -52,29 +55,25 @@ class camera():
         return (prey_detected,prey_cnt)
     
     def move_cnts(self,cnt, x,y):
-        #print "move cnt"
-        #print len(cnt)
         for i, point in enumerate(cnt):
             cnt[i][0][0] = cnt[i][0][0] + x
             cnt[i][0][1] = cnt[i][0][1] + y
         return cnt
     
     def get_biggest_contour(self,cnts):
-        #print "get biggest cnt"
-        #print len(cnts)
-        #for c in cnts:
-        #    print len(c)
         areas = []
         for c in cnts:
             areas.append(cv2.contourArea(c))
         sortedCnts = sorted( zip(areas, cnts), key= lambda x: x[0], reverse = True)
         return sortedCnts[0][1]
     
-    def action(self):
+    def action(self, trust):
+        self.lock.acquire()
         # take a picture, detect
         prey_detected = False
         catsnout_detected = False
         counter = 6
+        settings = ""
         for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
             self.image = frame.array
             self.rawCapture.truncate(0)
@@ -82,13 +81,23 @@ class camera():
             if counter < 1:
                 break
         n = datetime.now()
-        timestamp = "{0:04d}_{1:02d}_{2:02d}_{3:02d}_{4:02d}_{5:02d}_{6:01d}".format(n.year,n.month,n.day,n.hour,n.minute,n.second,int(n.microsecond/100000))
-        filename = "/home/max/Pictures/raw/{0}.png".format(timestamp)
+        timestamp_text = "{0:04d}_{1:02d}_{2:02d}_{3:02d}_{4:02d}_{5:02d}_{6:01d}".format(n.year,n.month,n.day,n.hour,n.minute,n.second,int(n.microsecond/100000))
+        settings = "{0}: ".format(timestamp_text)
+        settings = settings + "{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}".format(self.camera.sharpness, self.camera.contrast, self.camera.brightness, self.camera.saturation, self.camera.ISO, self.camera.exposure_compensation, self.camera.exposure_mode, self.camera.meter_mode, self.camera.awb_mode, self.camera.analog_gain, self.camera.awb_gains, self.camera.digital_gain, self.camera.drc_strength, self.camera.exposure_speed, self.camera.iso, self.camera.saturation, self.camera.sensor_mode, self.camera.shutter_speed)
+        settings = settings + "\n"
+        try:
+            file = open("/home/max/camera_settings.txt","a")
+            file.write(settings)
+            file.close()
+        except Exception:
+            rospy.logdebug("Unexpected Error: {0}".format(sys.exc_info()[0]))
+
+        filename = "/home/max/Pictures/raw/{0}.png".format(timestamp_text)
         cv2.imwrite(filename,self.image)
         # region of interest, background area
         self.image = self.image[:,150:390,:]
         
-        #telebot_message = "no catsnout detected"
+        image_text = "no catsnout detected"
         ## detection
         rects = self.cascade.detectMultiScale(self.image,
                 scaleFactor = 1.1, minNeighbors = 5,
@@ -137,15 +146,22 @@ class camera():
             if prey_detected:
                 # draw detection in red
                 cv2.drawContours(self.image, [prey_cnt], -1, (0, 0, 255), thickness = 2)
-                #telebot_message = "prey detected"
-                filename_mod = "/home/max/Pictures/classified/cat_prey/{0}_prey.png".format(timestamp)
+                image_text = "prey detected"
+                trust = trust * 0.33
+                filename_mod = "/home/max/Pictures/classified/cat_prey/{0}_prey.png".format(timestamp_text)
             else:
-                #telebot_message = "no prey detected"
-                filename_mod = "/home/max/Pictures/classified/cat_no_prey/{0}_no_prey.png".format(timestamp)
+                image_text = "no prey detected"
+                trust = trust * 2.0
+                filename_mod = "/home/max/Pictures/classified/cat_no_prey/{0}_no_prey.png".format(timestamp_text)
         else:
-            filename_mod     = "/home/max/Pictures/classified/no_catsnout/{0}_no_catsnout.png".format(timestamp)
+            trust = trust * 0.9
+            filename_mod     = "/home/max/Pictures/classified/no_catsnout/{0}_no_catsnout.png".format(timestamp_text)
 
+        cv2.putText(self.image,timestamp_text,(2,14),cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
+        cv2.putText(self.image,image_text,(2,32),cv2.FONT_HERSHEY_SIMPLEX, 0.66, (0, 0, 255), 2)
+        cv2.putText(self.image,"{0:.2f}/3.00".format(trust),(2,50),cv2.FONT_HERSHEY_SIMPLEX, 0.52, (0, 0, 255), 2)
+        
         cv2.imwrite(filename_mod,self.image)
-        #self.telegram_publisher.publish(telebot_message)
         self.telegram_publisher.publish(filename_mod)
+        self.lock.release()
         return (catsnout_detected, prey_detected)

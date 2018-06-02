@@ -89,26 +89,27 @@ class Take_a_picture_commander():
             self.camera_blocked = True
             self.light_publisher.publish(True)
             #rospy.logdebug("picture will be taken")
-            (catsnout_detected, prey_detected) = self.camera.action()
+            (catsnout_detected, prey_detected) = self.camera.action(self.trust)
             if catsnout_detected:
                 if prey_detected:
                     rospy.logdebug("prey detected")
                     self.trust = self.trust * 0.33
-                    self.telegram_publisher.publish("prey detected, trust is at {0:.2f}/{1:.2f}".format(self.trust,self.trust_threshold))
+                    #self.telegram_publisher.publish("prey detected, trust is at {0:.2f}/{1:.2f}".format(self.trust,self.trust_threshold))
                     self.door_lock_publisher.publish(True)
                 else:
                     rospy.logdebug("no prey detected")
                     self.trust = self.trust * 2.
-                    self.telegram_publisher.publish("no prey detected, trust is at {0:.2f}/{1:.2f}".format(self.trust,self.trust_threshold))
+                    #self.telegram_publisher.publish("no prey detected, trust is at {0:.2f}/{1:.2f}".format(self.trust,self.trust_threshold))
                     if self.trust >= self.trust_threshold:
                         rospy.logdebug("door opened, trust is {0:.2f}/{1:.2f}".format(self.trust,self.trust_threshold))
                         self.door_lock_publisher.publish(False)
             else:
                 self.picture_sequence += 1
                 self.trust = self.trust * 0.9
-                self.telegram_publisher.publish("no catsnout detected, trust is at {0:.2f}/{1:.2f}".format(self.trust,self.trust_threshold))
+                #self.telegram_publisher.publish("no catsnout detected, trust is at {0:.2f}/{1:.2f}".format(self.trust,self.trust_threshold))
                 if self.picture_sequence > 45:
                     self.telegram_publisher.publish("45 times no detections of a cats snout")
+                    self.picture_sequence = 0
                     rospy.logdebug("door opened after 45 no detections, trust at {0:.2f}/{1:.2f}".format(self.trust,self.trust_threshold))
                     self.door_lock_publisher.publish(False)
                 else:
@@ -116,6 +117,9 @@ class Take_a_picture_commander():
                     #self.door_lock_publisher.publish(True)
                 rospy.logdebug("no catsnout detected")
             rospy.logdebug("trust is at {0:.2f}/{1:.2f}".format(self.trust,self.trust_threshold))
+            # correction of trust, if too far off
+            if self.trust > 21.5: self.trust = 21
+            if self.trust < 0.1: self.trust = 0.1 
             self.light_publisher.publish(False)
             self.camera_blocked = False
         # keep track of the ir states
